@@ -8,23 +8,21 @@
 ### 1.アナログリモコンライブラリについて
 このライブラリはBitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 用に開発した赤外線リモコン用のArduinoライブラリです。
 
-対応リモコン
+**対応リモコン**
 - NECフォーマットのリモコン
-- [アナログリモコン](https://bit-trade-one.co.jp/adkrbt/)
+- BitTradeOne社 [アナログリモコン](https://bit-trade-one.co.jp/adkrbt/)
 
-対応ロボット
+**対応ロボット**
 - 外部割込み対応のポートに赤外線受光部を接続したArduinoロボット/ボード
-- Atmega328p(D2,D3), ATSAMD21(D4以外), 他
-　https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
-
-[リモコンロボ回路図](http://sohta02.web.fc2.com/release/2018FD.190603.pdf)  
-![remote3](../../../docs/raw/master/images/remoteA3.png)  
-
-リモコンロボ、クアッドクローラー以外にもarduinoライブラリを使うことで、他のロボットでも使うことが出来ます。
 [mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
+- Atmega328p(D2,D3), ATSAMD21(D4以外), 他  
+　https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+![remote3](../../../docs/raw/master/images/remoteA3.png)　　
+![remote](../../../docs/raw/master/images/remoteA.JPG)
 
-ぜひアナログリモコンであなたのロボットを操縦してみて下さい。 
-[「つくるっち」ダウンロード＆説明](http://sohta02.web.fc2.com/familyday_app.html)
+**開発環境**
+- Arduino IDE
+- スクラッチ互換アプリ [「つくるっち」](http://sohta02.web.fc2.com/familyday_app.html)
 
 ### 2.アナログリモコン特徴
 アナログリモコンはリモコンロボなどArduinoを使ったロボット用の赤外線リモコンです。NECフォーマットなど通常の赤外線方式比較して下記特徴があります。衝突を前提としたフォーマットになっており、CH1, CH2, CH3それぞれで送信周期を変えることで3つまでの赤外線リモコンを同時に使うことが出来ます。
@@ -36,7 +34,7 @@
 |リピートコード|使用|未使用|最初の送信が衝突しても問題ないように|
 |ボタンを離したとき|送信停止|2秒間送信|ボタンを離したときの挙動改善|
 
-![remote](../../../docs/raw/master/images/remoteA.JPG)
+
 
 ### 3.ライブラリ仕様
 
@@ -65,9 +63,9 @@
   uint8_t  xyLevel;	// joystick level
 
 定義
-	MODE_NORMAL         // disable xyKewys
-	MODE_XYKEYS         // enable xyKeys
-	MODE_XYKEYS_MERGE   // enable xyKeys and merge it to keys
+  MODE_NORMAL         // disable xyKewys
+  MODE_XYKEYS         // enable xyKeys
+  MODE_XYKEYS_MERGE   // enable xyKeys and merge it to keys
 
   REMOTE_OFF       // no data
   REMOTE_YES       // get NEC remote / released
@@ -78,14 +76,20 @@
 ### 4.使用例 (atmega328p)
 ```
 #include <analogRemote.h>
-analogRemote remote(MODE_NORMAL, 2, NULL);
 
-setup()
+void swLed(uint8_t onoff)
 {
+  digitalWrite(13, onoff);
+}
+analogRemote remote(MODE_NORMAL, 2, swLed);
+
+void setup()
+{
+  pinMode(13, OUTPUT);
   Serial.begin(115200);
 }
 
-loop()
+void loop()
 {
   if(remote.checkUpdated()) {
     Serial.println(remote.keys);
