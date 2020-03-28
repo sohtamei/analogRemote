@@ -15,10 +15,9 @@
 
 **対応ロボット**
 - BitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 
-- 外部割込み対応のポートに赤外線受光部を接続したArduinoロボット/ボード  
-[mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
-- Atmega328p(D2,D3), ATSAMD21(D4以外), 他  
-　https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+- [外部割込み対応のポート](https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/) に赤外線受光部を接続したArduinoロボット/ボード  
+例：[mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
+　
 ![remote3](../../../docs/raw/master/images/remoteA3.png)　　
 ![remote](../../../docs/raw/master/images/remoteA.JPG)
 
@@ -27,7 +26,7 @@
 - スクラッチ互換アプリ [「つくるっち」](http://sohta02.web.fc2.com/familyday_app.html)
 
 ### 2.アナログリモコン特徴
-アナログリモコンはリモコンロボなどArduinoを使ったロボット用の赤外線リモコンです。NECフォーマットなど通常の赤外線方式比較して下記特徴があります。衝突を前提としたフォーマットになっており、CH1, CH2, CH3それぞれで送信周期を変えることで3つまでの赤外線リモコンを同時に使うことが出来ます。
+アナログリモコンはリモコンロボなどArduinoを使ったロボット用の赤外線リモコンです。NECフォーマットなど通常の赤外線方式と比較して下記特徴があります。衝突を前提としたフォーマットになっており、CH1, CH2, CH3それぞれで送信周期を変えることで3つまでの赤外線リモコンを同時に使うことが出来ます。
 ||NECフォーマット|アナログリモコン|効果|
 |---|:-:|:-:|---|
 |送信周期|108ms|CH1-50ms<br />CH2-66ms<br />CH3-40ms|複数CH対応、レスポンス向上、衝突した時の挙動改善|
