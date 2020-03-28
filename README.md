@@ -7,7 +7,7 @@
 * [6.エンコード、タイミング](#6エンコードタイミング)
 
 ### 1.アナログリモコンライブラリについて
-このライブラリはBitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 用に開発した赤外線リモコン用のArduinoライブラリです。アナログリモコンは3chまでの同時制御＝ロボット対戦に対応しています。
+このライブラリはBitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 用に開発した赤外線リモコン用のArduinoライブラリです。アナログリモコンとの組み合わせで3chまでの同時制御＝ロボット対戦に対応しています。
 
 **対応リモコン**
 - NECフォーマットのリモコン
