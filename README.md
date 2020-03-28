@@ -15,6 +15,7 @@
 - BitTradeOne社 [アナログリモコン](https://bit-trade-one.co.jp/adkrbt/)
 
 **対応ロボット**
+- BitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 
 - 外部割込み対応のポートに赤外線受光部を接続したArduinoロボット/ボード  
 [mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
 - Atmega328p(D2,D3), ATSAMD21(D4以外), 他  
