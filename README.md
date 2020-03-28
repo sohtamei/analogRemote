@@ -1,11 +1,32 @@
-## アナログリモコン プロトコル
-* [1.特徴](#1特徴)
-* [2.コード](#2コード)
+## アナログリモコン ライブラリ
+* [1.アナログリモコン特徴](#1アナログリモコン特徴)
+* [2.リモコンコード](#2リモコンコード)
 * [3.エンコード、タイミング](#3エンコードタイミング)
 * [4.使用例](#4使用例)
 * [5.UART通信プロトコル](#5uart通信プロトコル)
 
-### 1.特徴
+### 1.アナログリモコンライブラリについて
+このライブラリはBitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 用に開発した赤外線リモコン用のArduinoライブラリです。
+
+対応リモコン
+- NECフォーマットのリモコン
+- [アナログリモコン](https://bit-trade-one.co.jp/adkrbt/)
+
+対応ロボット
+- 外部割込み対応のポートに赤外線受光部を接続したArduinoロボット/ボード
+- Atmega328p(D2,D3), ATSAMD21(D4以外), 他
+　https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+
+[リモコンロボ回路図](http://sohta02.web.fc2.com/release/2018FD.190603.pdf)  
+![remote3](../../../docs/raw/master/images/remoteA3.png)  
+
+リモコンロボ、クアッドクローラー以外にもarduinoライブラリを使うことで、他のロボットでも使うことが出来ます。
+[mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
+
+ぜひアナログリモコンであなたのロボットを操縦してみて下さい。 
+[「つくるっち」ダウンロード＆説明](http://sohta02.web.fc2.com/familyday_app.html)
+
+### 2.アナログリモコン特徴
 アナログリモコンはリモコンロボなどArduinoを使ったロボット用の赤外線リモコンです。NECフォーマットなど通常の赤外線方式比較して下記特徴があります。衝突を前提としたフォーマットになっており、CH1, CH2, CH3それぞれで送信周期を変えることで3つまでの赤外線リモコンを同時に使うことが出来ます。
 ||NECフォーマット|アナログリモコン|効果|
 |---|:-:|:-:|---|
@@ -17,7 +38,62 @@
 
 ![remote](../../../docs/raw/master/images/remoteA.JPG)
 
-### 2.コード
+### 3.ライブラリ仕様
+
+```
+ヘッダファイル
+  analogRemote.h
+
+クラス名
+  analogRemote
+
+コンストラクタ
+  analogRemote(
+    uint8_t _mode_xyKeys = MODE_NORMAL,      // MODE_xx
+    uint8_t _port_irrx = 2,                  // IR_RX port(L active)
+    void (*_funcLed)(uint8_t onoff) = NULL); // turn LED on/off
+
+メソッド
+  int checkUpdated(void);              // update remocon data
+                                       // return REMOTE_xx
+
+プロパティ
+  uint8_t  keys;    // BUTTON_xx
+  int16_t  x;
+  int16_t  y;
+  uint8_t  xyKeys;	// XY_xx, joystick direction
+  uint8_t  xyLevel;	// joystick level
+
+定義
+	MODE_NORMAL         // disable xyKewys
+	MODE_XYKEYS         // enable xyKeys
+	MODE_XYKEYS_MERGE   // enable xyKeys and merge it to keys
+
+  REMOTE_OFF       // no data
+  REMOTE_YES       // get NEC remote / released
+  REMOTE_ANALOG    // get analog remote
+  
+```
+
+### 4.使用例 (atmega328p)
+```
+#include <analogRemote.h>
+analogRemote remote(MODE_NORMAL, 2, NULL);
+
+setup()
+{
+  Serial.begin(115200);
+}
+
+loop()
+{
+  if(remote.checkUpdated()) {
+    Serial.println(remote.keys);
+  }
+}
+```
+
+### 2.リモコンコード
 アナログリモコンは15bitの独自フォーマットになっています。
 |ビット|機能|データ|
 |---|---|---|
@@ -36,21 +112,6 @@ T=350us
 |スタートビット|000(3T)|
 |bit[n]=1|10又は01(1Tx2)|
 |bit[n]=0|11又は00(2T)|
-
-### 4.使用例
-リモコンロボ、クアッドクローラー以外にもarduinoライブラリを使うことで、他のロボットでも使うことが出来ます。
-[mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
-
-ぜひアナログリモコンであなたのロボットを操縦してみて下さい。Arduinoライブラリは「つくるっち」アプリの ext/arduinoLib にあります。  
-[「つくるっち」ダウンロード＆説明](http://sohta02.web.fc2.com/familyday_app.html)
-
-アナログリモコンを使う場合下記の制約があります。
-- Atmega328pのみ対応
-- 赤外線リモコン入力＝D2 (INT0)
-- Timer0使用 (250kHz,8bit = 977Hz)
-
-[リモコンロボ回路図](http://sohta02.web.fc2.com/release/2018FD.190603.pdf)  
-![remote3](../../../docs/raw/master/images/remoteA3.png)  
 
 ### 5.UART通信プロトコル
 リモコン通信は特殊なプロトコルを使っています。
