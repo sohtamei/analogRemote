@@ -1,4 +1,5 @@
-// copyright to SohtaMei 2019.
+// copyright to SohtaMei 2020.
+// see https://github.com/sohtamei/analogRemote
 
 #ifndef analogRemote_h
 #define analogRemote_h
@@ -59,15 +60,15 @@ enum {
 };
 
 enum {
-	MODE_NORMAL,					// for remoconRobo
-	MODE_XYKEYS,					// for QuadCrawler(normal)
-	MODE_XYKEYS_MERGE,				// for QuadCrawler(pcmode), keysにxyKeysがmergeされる
+	MODE_NORMAL,					// disable xyKewys
+	MODE_XYKEYS,					// enable xyKeys
+	MODE_XYKEYS_MERGE,				// enable xyKeys and merge it to keys
 };
 
 enum {
-	REMOTE_OFF = 0,
-	REMOTE_YES,
-	REMOTE_ANALOG,
+	REMOTE_OFF = 0,					// no data
+	REMOTE_YES,						// get NEC remote / released
+	REMOTE_ANALOG,					// get analog remote
 };
 
 class analogRemote {
@@ -94,8 +95,8 @@ public:
 
 	int16_t  x;
 	int16_t  y;
-	uint8_t  keys;
-	uint8_t  xyKeys;	// joystick direction
+	uint8_t  keys;		// BUTTON_xx
+	uint8_t  xyKeys;	// XY_xx, joystick direction
 	uint8_t  xyLevel;	// joystick level
 
 private:
