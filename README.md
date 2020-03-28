@@ -1,19 +1,21 @@
 ## アナログリモコン ライブラリ
-* [1.アナログリモコン特徴](#1アナログリモコン特徴)
-* [2.リモコンコード](#2リモコンコード)
-* [3.エンコード、タイミング](#3エンコードタイミング)
-* [4.使用例](#4使用例)
-* [5.UART通信プロトコル](#5uart通信プロトコル)
+* [1.アナログリモコンライブラリについて](#1アナログリモコンライブラリについて)
+* [2.アナログリモコン特徴](#2アナログリモコン特徴)
+* [3.ライブラリ仕様](#3ライブラリ仕様)
+* [4.使用例(atmega328p)](#4使用例atmega328p)
+* [5.キー定義](#5キー定義)
+* [6.リモコンコード](#6リモコンコード)
+* [7.エンコード、タイミング](#7エンコードタイミング)
 
 ### 1.アナログリモコンライブラリについて
-このライブラリはBitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 用に開発した赤外線リモコン用のArduinoライブラリです。
+このライブラリはBitTradeOne社 [リモコンロボ](https://bit-trade-one.co.jp/adkrbt/) と [クアッドクローラー](https://bit-trade-one.co.jp/adcrbt/) 用に開発した赤外線リモコン用のArduinoライブラリです。アナログリモコンは3chまでの同時制御＝ロボット対戦に対応しています。
 
 **対応リモコン**
 - NECフォーマットのリモコン
 - BitTradeOne社 [アナログリモコン](https://bit-trade-one.co.jp/adkrbt/)
 
 **対応ロボット**
-- 外部割込み対応のポートに赤外線受光部を接続したArduinoロボット/ボード
+- 外部割込み対応のポートに赤外線受光部を接続したArduinoロボット/ボード  
 [mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
 - Atmega328p(D2,D3), ATSAMD21(D4以外), 他  
 　https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
@@ -33,8 +35,6 @@
 |送信時間|~85.4ms(~152T)|11.6ms(33T)|レスポンス向上、複数のリモコンが送信したとき衝突しにくいように|
 |リピートコード|使用|未使用|最初の送信が衝突しても問題ないように|
 |ボタンを離したとき|送信停止|2秒間送信|ボタンを離したときの挙動改善|
-
-
 
 ### 3.ライブラリ仕様
 
@@ -73,7 +73,7 @@
   
 ```
 
-### 4.使用例 (atmega328p)
+### 4.使用例(atmega328p)
 ```
 #include <analogRemote.h>
 
@@ -97,7 +97,51 @@ void loop()
 }
 ```
 
-### 2.リモコンコード
+### 5.キー定義
+キーコードはアナログリモコン、標準リモコン（NECフォーマット）両対応です。
+|ボタン|キーコード|
+|---|---|
+|BUTTON_POWER|0x45|
+|BUTTON_B|0x46|
+|BUTTON_MENU|0x47|
+|BUTTON_TEST|0x44|
+|BUTTON_RETURN|0x43|
+|BUTTON_C|0x0D|
+|BUTTON_UP|0x40|
+|BUTTON_LEFT|0x07|
+|BUTTON_CENTER|0x15|
+|BUTTON_RIGHT|0x09|
+|BUTTON_DOWN|0x19|
+|BUTTON_0|0x16|
+|BUTTON_1|0x0C|
+|BUTTON_2|0x18|
+|BUTTON_3|0x5E|
+|BUTTON_4|0x08|
+|BUTTON_5|0x1C|
+|BUTTON_6|0x5A|
+|BUTTON_7|0x42|
+|BUTTON_8|0x52|
+|BUTTON_9|0x4A|
+|BUTTON_A_XY|0x60|
+|BUTTON_A_CENTER|0x61|
+|BUTTON_A_UP|0x62|
+|BUTTON_A_RIGHT|0x63|
+|BUTTON_A_LEFT|0x64|
+|BUTTON_A_DOWN|0x65|
+
+MODE_XYKEYSのときはジョイスティック操作もキーコードとして返します。
+|ボタン|キーコード|
+|---|---|
+|XY_UP_R|0x70|
+|XY_UP|0x71|
+|XY_UP_L|0x72|
+|XY_RIGHT|0x73|
+|XY_LEFT|0x74|
+|XY_DOWN_R|0x75|
+|XY_DOWN|0x76|
+|XY_DOWN_L|0x77|
+
+### 6.リモコンコード
 アナログリモコンは15bitの独自フォーマットになっています。
 |ビット|機能|データ|
 |---|---|---|
@@ -106,7 +150,7 @@ void loop()
 |bit7~3|ジョイスティック左右|11111-右<br />10000-中立<br />00000-左|
 |bit2~0|キー|000-OFF<br />001-CENTER<br />010-UP<br />011-RIGHT<br />100-LEFT<br />101-DOWN|
 
-### 3.エンコード、タイミング
+### 7.エンコード、タイミング
 キャリア周波数 38kHz  
 T=350us  
 リモコンコードはスタートビットから始まる [biphaseエンコード](https://ja.wikipedia.org/wiki/%E4%BC%9D%E9%80%81%E8%B7%AF%E7%AC%A6%E5%8F%B7) になってます。01 10000 10000 000のとき
@@ -116,53 +160,3 @@ T=350us
 |スタートビット|000(3T)|
 |bit[n]=1|10又は01(1Tx2)|
 |bit[n]=0|11又は00(2T)|
-
-### 5.UART通信プロトコル
-リモコン通信は特殊なプロトコルを使っています。
-||戻り値|
-|---|---|
-|byte4|キーコード|
-|byte5~6|ジョイスティックX|
-|byte7~8|ジョイスティックY|
-
-キーコードはアナログリモコン、標準リモコン（NECフォーマット）両対応です。
-|ボタン|キーコード|
-|---|---|
-|POWER|0x45|
-|B|0x46|
-|MENU|0x47|
-|TEST|0x44|
-|RETURN|0x43|
-|C|0x0D|
-|UP|0x40|
-|LEFT|0x07|
-|CENTER|0x15|
-|RIGHT|0x09|
-|DOWN|0x19|
-|0|0x16|
-|1|0x0C|
-|2|0x18|
-|3|0x5E|
-|4|0x08|
-|5|0x1C|
-|6|0x5A|
-|7|0x42|
-|8|0x52|
-|9|0x4A|
-|アナログCENTER|0x61|
-|アナログUP|0x62|
-|アナログRIGHT|0x63|
-|アナログLEFT|0x64|
-|アナログDOWN|0x65|
-
-クアッドクローラー用ライブラリはジョイスティック操作もキーコードとして返します。
-|ボタン|キーコード|
-|---|---|
-|ジョイスティックUP_R|0x70|
-|ジョイスティックUP|0x71|
-|ジョイスティックUP_L|0x72|
-|ジョイスティックRIGHT|0x73|
-|ジョイスティックLEFT|0x74|
-|ジョイスティックDOWN_R|0x75|
-|ジョイスティックDOWN|0x76|
-|ジョイスティックDOWN_L|0x77|
