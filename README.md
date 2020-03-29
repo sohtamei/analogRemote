@@ -84,6 +84,7 @@ analogRemote remote(MODE_NORMAL, 2, swLed);
 void setup()
 {
   pinMode(13, OUTPUT);
+  millis();             // start timer0
   Serial.begin(115200);
 }
 
