@@ -19,7 +19,8 @@
 例：[mBot＋アナログリモコン(動画)](http://sohta02.web.fc2.com/images/MAQ04884.MP4)  
 　
 ![remote3](../../../docs/raw/master/images/remoteA3.png)　　
-![remote](../../../docs/raw/master/images/remoteA.JPG)
+
+<img src="../../../docs/raw/master/images/remoteA.JPG" width="106" height="235">
 
 **開発環境**
 - Arduino IDE
