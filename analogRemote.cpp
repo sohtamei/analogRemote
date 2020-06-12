@@ -2,7 +2,9 @@
 
 #include <stdint.h>
 #include <Arduino.h>
+#ifndef ESP32
 #include <avr/interrupt.h>
+#endif
 
 #include "analogRemote.h"
 
