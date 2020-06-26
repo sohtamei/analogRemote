@@ -244,7 +244,7 @@ int analogRemote::checkUpdated(void)
 					xyKeys = 0;
 					xyLevel = 0;
 				}
-				if(mode_xyKeys == MODE_XYKEYS_MERGE && keys == BUTTON_A_XY)
+				if(mode_xyKeys == MODE_XYKEYS_MERGE && keys == BUTTON_A_XY && xyKeys)
 				    keys = xyKeys;
 			}
 		} else if(keys) {
