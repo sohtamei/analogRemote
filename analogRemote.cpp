@@ -67,8 +67,10 @@ union rData {
 		unsigned int x			: 5;	// bit7~3  :
 		unsigned int y			: 5;	// bit12~8 :
 		unsigned int ch			: 2;	// bit14~13: (1)chA, (2)chB, (0)chC
+		unsigned int analog		: 1;	// bit15   : (1)analog remote, (0)digital remote
 	} ana;
 };
+#define rData_ANALOG	(1<<15)
 static volatile union rData rData;
 static volatile uint8_t updated = 0;
 
@@ -156,11 +158,11 @@ static void irq_irrx(void)
 			else
 				state = STATE_L_ANALOG;
 		} else {
-			union rData _rData; _rData.data = rawData;
+			union rData _rData; _rData.data = rawData | rData_ANALOG;
 			if(!analog_ch) {
 				analog_ch = _rData.ana.ch;
 			} else if(_rData.ana.ch == analog_ch) {
-				rData.data = rawData;
+				rData.data = _rData.data;
 				last_timer2 = millis();
 				updated = REMOTE_ANALOG;
 				if(funcLed) funcLed(1);
@@ -184,16 +186,16 @@ int analogRemote::checkUpdated(void)
 
 	if(_last_timer2) {
 	// pressed
-		uint32_t timeout = (_updated == REMOTE_ANALOG) ? DUR_H_TIMEOUT_A : dur_h_timeout;
+		uint32_t timeout = (_rData.data & rData_ANALOG) ? DUR_H_TIMEOUT_A : dur_h_timeout;
 		if(millis() - _last_timer2 < timeout) {
 			if(!keys && _rData.data) {
 			// 一旦timeoutし、repeatが来たとき
-				_updated = REMOTE_YES;
+				_updated = (_rData.data & rData_ANALOG) ? REMOTE_ANALOG: REMOTE_YES;
 				if(funcLed) funcLed(1);
 			}
 			if(_updated) {
 				xyKeys = xyLevel = 0;
-				if(_updated == REMOTE_ANALOG) {
+				if(_rData.data & rData_ANALOG) {
 					keys	= _rData.ana.keys + BUTTON_A_XY;
 					x		= (_rData.ana.x - X_CENTER)*16;
 					y		= (_rData.ana.y - Y_CENTER)*16;
@@ -202,7 +204,7 @@ int analogRemote::checkUpdated(void)
 					x = y = 0;
 				}
 			}
-			if(mode_xyKeys != MODE_NORMAL && _updated == REMOTE_ANALOG) {
+			if(mode_xyKeys != MODE_NORMAL && (_rData.data & rData_ANALOG)) {
 				static const uint8_t ButtonTable[] = {
 					XY_RIGHT,
 					XY_UP_R,
