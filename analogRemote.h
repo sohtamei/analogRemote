@@ -79,6 +79,8 @@ public:
 		uint8_t _port_irrx  = 2, 					// IR_RX port(L active)
 		void (*_funcLed)(uint8_t onoff) = NULL);	// turn LED on/off
 
+	void probe(void);
+
 	int checkUpdated(void);				// return REMOTE_xx, update remocon data
 
 	// for scratch

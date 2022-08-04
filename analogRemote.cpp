@@ -291,13 +291,17 @@ analogRemote::analogRemote(
 	port_irrx	= _port_irrx;
 	funcLed		= _funcLed;
 
-	pinMode(port_irrx, INPUT);
-	attachInterrupt(digitalPinToInterrupt(port_irrx), irq_irrx, FALLING);
-	state = STATE_H_IDLE;
-	rData.data = 0;
-
 	if(mode_xyKeys == MODE_NORMAL)
 		dur_h_timeout = DUR_H_TIMEOUT_REMOCONROBO;
 	else
 		dur_h_timeout = DUR_H_TIMEOUT_QUADCRAWLER;
+}
+
+void analogRemote::probe(void)
+{
+	pinMode(port_irrx, INPUT);
+	attachInterrupt(digitalPinToInterrupt(port_irrx), irq_irrx, FALLING);
+	state = STATE_H_IDLE;
+	rData.data = 0;
+	return;
 }
